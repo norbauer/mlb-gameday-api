@@ -1,4 +1,4 @@
-class MLBApi::Cache
+class MLBAPI::Cache
 
   def initialize
     @cache = Hash.new
