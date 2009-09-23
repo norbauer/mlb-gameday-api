@@ -1,0 +1,24 @@
+h1. MLB Gameday API
+
+This API is an implementation to fetch the same data that the MLB Gameday application uses to display data.
+
+h2. Requirements
+
+* curb
+* nokogiri
+
+h2. Brittle API Warning
+
+This is not a publically documented or supported API. As such, the API may be particularly brittle, as it is subject to change at any time by MLB Advanced Media.
+
+h2. Data Agreement
+
+All documents fetched by this API clearly state:
+
+bq. Copyright 2009 MLB Advanced Media, L.P.  Use of any content on this page acknowledges agreement to the terms posted here http://gdx.mlb.com/components/copyright.txt
+
+Which furthermore states:
+
+bq. The accounts, descriptions, data and presentation in the referring page (the "Materials") are proprietary content of MLB Advanced Media, L.P ("MLBAM").<br />Only individual, non-commercial, non-bulk use of the Materials is permitted and any other use of the Materials is prohibited without prior written authorization from MLBAM.<br />Authorized users of the Materials are prohibited from using the Materials in any commercial manner other than as expressly authorized by MLBAM.
+
+Naturally, these terms are passed on to any who use this API. It is your responsibility to abide by them.
