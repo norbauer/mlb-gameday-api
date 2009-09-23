@@ -1,5 +1,6 @@
 require 'nokogiri'
 require 'curb'
+require 'time'
 
 require 'mlb_gameday_api/base'
 require 'mlb_gameday_api/cache'

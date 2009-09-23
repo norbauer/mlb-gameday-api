@@ -1,6 +1,9 @@
-require 'time'
+# define the module once
+module MLBApi
+  class FetchError < StandardError; end
+end
 
-module MLBApi; class Base
+class MLBApi::Base
   def initialize
     @cache = MLBApi::Cache.new
     @curl = Curl::Easy.new
@@ -14,18 +17,23 @@ module MLBApi; class Base
 private
 
   def construct_url(path, date)
-    "http://gdx.mlb.com/components/game/mlb/year_#{date.year}/month_#{'%02d' % date.month}/day_#{'%02d' % date.day}/#{path}"
+    "http://gdx.mlb.com/components/game/mlb/year_%d/month_%02d/day_%02d/%s" % [date.year, date.month, date.day, path]
   end
 
-  def fetch(url)
+  def fetch(url, retries = 3)
     @curl.url = url
     @curl.headers['If-Modified-Since'] = @cache.stamp(url)
     @curl.perform
-    if @curl.response_code == 304
+    case @curl.response_code
+    when 304
       @cache.keep(key, local_expiration(@curl))
       @cache.content(key)
-    else
+    when 200
       @cache.set(url, parse_body(@curl), local_expiration(@curl))
+    elsif retries <= 0
+      raise MLBApi::FetchError
+    else
+      fetch(url, retries - 1)
     end
   end
 
@@ -40,5 +48,4 @@ private
   def header(doc, key)
     match = doc.header_str.match(/[\r\n\A]#{key}: ([^\r\n]*)/) and match[1]
   end
-
 end

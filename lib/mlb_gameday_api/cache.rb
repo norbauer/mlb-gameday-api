@@ -1,4 +1,5 @@
-module MLBApi; class Cache
+class MLBApi::Cache
+
   def initialize
     @cache = Hash.new
   end
@@ -23,4 +24,5 @@ module MLBApi; class Cache
     @cache[key] = { :expires_at => expires, :content => content, :cached_at => Time.now }
     content
   end
+
 end
