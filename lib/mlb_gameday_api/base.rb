@@ -30,10 +30,12 @@ private
       @cache.content(key)
     when 200
       @cache.set(url, parse_body(@curl), local_expiration(@curl))
-    elsif retries <= 0
-      raise MLBApi::FetchError
     else
-      fetch(url, retries - 1)
+      if retries <= 0
+        raise MLBApi::FetchError
+      else
+        fetch(url, retries - 1)
+      end
     end
   end
 
