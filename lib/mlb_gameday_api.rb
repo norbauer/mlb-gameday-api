@@ -8,6 +8,6 @@ module MLBAPI; end
 require 'mlb_gameday_api/base'
 require 'mlb_gameday_api/client'
 require 'mlb_gameday_api/cache'
+require 'mlb_gameday_api/model'
 require 'mlb_gameday_api/game'
 require 'mlb_gameday_api/player'
-require 'mlb_gameday_api/day'
