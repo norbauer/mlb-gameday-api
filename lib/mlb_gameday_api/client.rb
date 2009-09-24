@@ -30,7 +30,7 @@ private
       @cache.set(url, parse_body(@curl), local_expiration(@curl))
     else
       if retries <= 0
-        raise MLBAPI::FetchError
+        raise MLBAPI::FetchError, "HTTP #{@curl.response_code} - GET #{url}"
       else
         fetch(url, retries - 1)
       end
