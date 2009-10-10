@@ -4,7 +4,9 @@ class MLBAPI::Player < MLBAPI::Model
   #  id="425903" first="Kevin" last="Youkilis" num="20" boxname="Youkilis" rl="R" position="1B" status="A" bat_order="4" game_position="3B" avg=".308" hr="25" rbi="86"
   # pitcher:
   #  id="449097" first="Jonathan" last="Papelbon" num="58" boxname="Papelbon" rl="R" position="P" status="A" avg=".000" hr="0" rbi="0" wins="1" losses="1" era="1.97"
-  attr_accessor :game
+
+  hash_attr_accessor :id, :first, :last, :num, :boxname, :rl, :position, :status, :bat_order,
+                     :game_position, :avg, :hr, :rbi, :wins, :losses, :era
 
   def pitcher?
     self.position == 'P'

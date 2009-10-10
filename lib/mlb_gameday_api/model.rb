@@ -15,37 +15,30 @@ class MLBAPI::Model < MLBAPI::Base
 
 private
 
-  # Automatically sets up readers/writers, but only if they exist in @attributes.
-  # The assumption here is that @attributes always has the same keys for each class, which *should* be true.
-  def method_missing(sym, *args, &block)
-    if args.empty? && block.nil? && ![?=, ?!, ??].include?(sym.to_s[-1]) && @attributes.has_key?(sym.to_s)
-      create_attr_reader(sym)
-      send(sym)
-    elsif args.size == 1 && block.nil? && sym.to_s[-1] == ?= && @attributes.has_key?(sym.to_s)
-      create_attr_writer(sym)
-      send(sym, *args)
-    else
-      super
-    end
-  end
-
-  def create_attr_reader(sym)
-    self.class.class_eval do
+  def self.hash_attr_reader(*syms)
+    syms.each do |sym|
+      sym = sym.to_s
       define_method(sym) do |*args|
         raise ArgumentError, "wrong number of arguments (#{args.size} for 0)" unless args.size == 0
-        @attributes[sym.to_s]
+        @attributes[sym]
       end
     end
   end
 
-  def create_attr_writer(sym)
-    sym = "#{sym}=" unless sym.to_s[-1] == ?=
-    self.class.class_eval do
-      define_method(sym) do |*args|
+  def self.hash_attr_writer(*syms)
+    syms.each do |sym|
+      method = sym.to_s[-1] == ?= ? sym.to_s : "#{sym}="
+      attribute = method[0...-1]
+      define_method(method) do |*args|
         raise ArgumentError, "wrong number of arguments (#{args.size} for 1)" unless args.size == 1
-        @attributes[sym.to_s[0...-1]] = args.first
+        @attributes[attribute] = args.first
       end
     end
+  end
+
+  def self.hash_attr_accessor(*syms)
+    hash_attr_reader(*syms)
+    hash_attr_writer(*syms)
   end
 
   # turn { 'b' => '0' } into { 'balls' => 0 } by calling remap_hash(hsh, { 'b' => 'balls' })

@@ -5,10 +5,15 @@ class MLBAPI::Game < MLBAPI::Model
                 :batter, :pitcher, :deck, :hole,
                 :weather
 
-  def initialize(*)
-    super
-    @innings = {}
-  end
+  hash_attr_accessor :ampm, :away_code, :away_division, :away_file_code, :away_loss, :away_name_abbrev,
+                     :away_preview_link, :away_sport_code, :away_team_city, :away_team_errors, :away_team_hits,
+                     :away_team_id, :away_team_name, :away_team_runs, :away_win, :day, :game_pk, :game_type,
+                     :gameday_link, :gameday_sw, :home_code, :home_division, :home_file_code, :home_league_id,
+                     :home_loss, :home_name_abbrev, :home_preview_link, :home_sport_code, :home_team_city,
+                     :home_team_hits, :home_team_id, :home_team_name, :home_team_runs, :home_win,
+                     :id, :ind, :inning, :league, :outs, :scheduled_innings, :status, :time, :time_zone,
+                     :top_inning, :tv_station, :venue, :venue_id, :venue_w_chan_loc, :wrapup_link,
+                     :away_games_back, :away_games_back_wildcard, :home_games_back, :home_games_back_wildcard
 
   # list of attributes and sample values
 
@@ -70,6 +75,11 @@ class MLBAPI::Game < MLBAPI::Model
   #  ["home_games_back", "17.5"],
   #  ["home_games_back_wildcard", "26.5"],
 
+  def initialize(*)
+    super
+    @innings = {}
+  end
+
   def players
     @players ||= MLBAPI::Player.find_all_by_game(self, date)
   end
@@ -93,8 +103,8 @@ class MLBAPI::Game < MLBAPI::Model
 
   # updates the current state of the game using the plays data
   def update
-    pxml = client.load("gid_#{game.gameday_link}/players.xml", date)
-    game = pxml.xpath('/game')
+    pxml = client.load("gid_#{self.gameday_link}/plays.xml", date)
+    game = pxml.xpath('/game').first
     @attributes.merge(stringify_xml_node_values(remap_hash(game.attributes, { 
       'status' => 'status',
       'inning' => 'inning',
@@ -103,8 +113,8 @@ class MLBAPI::Game < MLBAPI::Model
       's' => 'strikes',
       'o' => 'outs'
     })))
-    score = game.xpath('score')
-    @attribute.merge(stringify_xml_node_values(remap_hash(score.attributes, {
+    score = game.xpath('score').first
+    @attributes.merge(stringify_xml_node_values(remap_hash(score.attributes, {
       'ar' => 'away_team_runs',
       'ah' => 'away_team_hits',
       'ae' => 'away_team_errors',
@@ -112,7 +122,11 @@ class MLBAPI::Game < MLBAPI::Model
       'hh' => 'home_team_hits',
       'he' => 'home_team_errors'
     })))
-    self.at_bat = MLBAPI::AtBat.from_node(game.xpath('atbat'), self)
+    if self.at_bat
+      self.at_bat = self.at_bat.update_from_node(game.xpath('atbat').first)
+    else
+      self.at_bat = MLBAPI::AtBat.from_node(game.xpath('atbat').first, self)
+    end
   end
 
   def date
