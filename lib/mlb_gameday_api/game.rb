@@ -93,7 +93,7 @@ class MLBAPI::Game < MLBAPI::Model
     players.select { |p| p.team == t.to_s }
   end
 
-  def inning(inning)
+  def inning_detail(inning)
     # re-fetch inning
     if !['Final', 'Game Over'].include?(self.status) && @innings[inning] && @inning[inning].next == 'N'
       @inning[inning] = nil
@@ -122,15 +122,25 @@ class MLBAPI::Game < MLBAPI::Model
       'hh' => 'home_team_hits',
       'he' => 'home_team_errors'
     })))
-    if self.at_bat
-      self.at_bat = self.at_bat.update_from_node(game.xpath('atbat').first)
-    else
-      self.at_bat = MLBAPI::AtBat.from_node(game.xpath('atbat').first, self)
+    if abxml = game.xpath('atbat').first
+      if self.at_bat
+        self.at_bat = self.at_bat.update_from_node(abxml)
+      else
+        self.at_bat = MLBAPI::AtBat.from_node(abxml, self)
+      end
     end
   end
 
   def date
     @date ||= Date.new(*self.id.split('/')[0..2].collect(&:to_i))
+  end
+
+  def top?
+    top_inning == 'Y'
+  end
+
+  def top_or_bot
+    top? ? 'Top' : 'Bot'
   end
 
 end

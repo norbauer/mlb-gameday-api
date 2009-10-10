@@ -38,6 +38,8 @@ class MLBAPI::Pitch < MLBAPI::Model
       'Splitter'
     when 'KB', 'KN'  # not sure what the code is for a knuckle, these are guesses
       'Knuckleball'
+    when 'PO'
+      'Pitch-out'
     else
       pitch_type
     end
