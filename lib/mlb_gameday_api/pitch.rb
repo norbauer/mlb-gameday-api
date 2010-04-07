@@ -6,7 +6,7 @@ class MLBAPI::Pitch < MLBAPI::Model
                      :pfx_x, :pfx_z, :px, :pz, :x0, :y0, :z0, :vx0, :vy0, :vz0, :ax, :ay, :az, :break_y,
                      :break_angle, :break_length, :pitch_type, :type_confidence, :spin_dir, :spin_rate
 
- # type="B" id="251" x="176.82" y="120.88" des="Ball" sv_id="091009_192609" start_speed="79.1" 
+ # type="B" id="251" x="176.82" y="120.88" des="Ball" sv_id="091009_192609" start_speed="79.1"
  # end_speed="72.6" sz_top="3.440" sz_bot="1.720" pfx_x="2.974" pfx_z="-6.286" px="-2.252" pz="3.584"
  # x0="-2.433" y0="50.000" z0="6.229" vx0="-0.466" vy0="-116.017" vz0="2.873" ax="4.002" ay="24.273"
  # az="-40.559" break_y="23.8" break_angle="-5.6" break_length="12.1" pitch_type="CU" type_confidence="1.231"
@@ -36,6 +36,10 @@ class MLBAPI::Pitch < MLBAPI::Model
       'Slider'
     when 'SP'
       'Splitter'
+    when 'SI'
+      'Sinker'
+    when 'KC'
+      'Knuckle Curve'
     when 'KB', 'KN'  # not sure what the code is for a knuckle, these are guesses
       'Knuckleball'
     when 'PO'

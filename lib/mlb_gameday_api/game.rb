@@ -105,7 +105,7 @@ class MLBAPI::Game < MLBAPI::Model
   def update
     pxml = client.load("gid_#{self.gameday_link}/plays.xml", date)
     game = pxml.xpath('/game').first
-    @attributes.merge(stringify_xml_node_values(remap_hash(game.attributes, { 
+    @attributes.merge!(stringify_xml_node_values(remap_hash(game.attributes, {
       'status' => 'status',
       'inning' => 'inning',
       'top_inning' => 'top_inning',
@@ -114,7 +114,7 @@ class MLBAPI::Game < MLBAPI::Model
       'o' => 'outs'
     })))
     score = game.xpath('score').first
-    @attributes.merge(stringify_xml_node_values(remap_hash(score.attributes, {
+    @attributes.merge!(stringify_xml_node_values(remap_hash(score.attributes, {
       'ar' => 'away_team_runs',
       'ah' => 'away_team_hits',
       'ae' => 'away_team_errors',
