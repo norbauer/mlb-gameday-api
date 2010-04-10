@@ -38,7 +38,7 @@ class MLBAPI::AtBat < MLBAPI::Model
   end
 
   def rbi?
-    des =~ /scores\./
+    des =~ / homers |scores\./
   end
 
   def scorecard
@@ -57,13 +57,13 @@ class MLBAPI::AtBat < MLBAPI::Model
       'G'
     when /grounds into a force out/
       'FC'
-    when /singles/
+    when / singles /
       '1B'
-    when /doubles/
+    when / doubles /
       '2B'
-    when /triples/
+    when / triples /
       '3B'
-    when /home run/
+    when / homers /
       'HR'
     when /sacrifice fly/
       'SF'
