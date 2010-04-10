@@ -40,7 +40,7 @@ class MLBAPI::Pitch < MLBAPI::Model
       'Sinker'
     when 'KC'
       'Knuckle Curve'
-    when 'KB', 'KN'  # not sure what the code is for a knuckle, these are guesses
+    when 'KN'
       'Knuckleball'
     when 'PO'
       'Pitch-out'
