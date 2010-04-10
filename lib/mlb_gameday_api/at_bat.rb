@@ -34,7 +34,7 @@ class MLBAPI::AtBat < MLBAPI::Model
   end
 
   def out?
-    scorecard !~ /1B|2B|3B|BB|HBP/
+    scorecard !~ /1B|2B|3B|HR|BB|HBP/ && des !~ /out[\w ]+on the throw/
   end
 
   def rbi?
@@ -67,6 +67,8 @@ class MLBAPI::AtBat < MLBAPI::Model
       'HR'
     when /sacrifice fly/
       'SF'
+    when /foul territory/
+      'FO'
     when /flies out/
       'F'
     when /pops out/
